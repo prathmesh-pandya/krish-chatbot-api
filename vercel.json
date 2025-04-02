@@ -11,15 +11,9 @@
       }
     }
   ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/server.js"
-    }
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/server.js" },
+    { "source": "/(.*)", "destination": "/server.js" }
   ],
   "env": {
     "GOOGLE_API_KEY": "@google_api_key"

@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
-    origin: ['https://krish-chatbot-oasrieqf4-prathmesh-pandya-s-projects.vercel.app', 'https://krish-chatbot-ui.vercel.app/', 'http://localhost:3000'],
+    origin: ['https://krish-chatbot-oasrieqf4-prathmesh-pandya-s-projects.vercel.app', 'https://krish-chatbot-ui.vercel.app', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,

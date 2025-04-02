@@ -15,9 +15,6 @@
     { "source": "/api/(.*)", "destination": "/server.js" },
     { "source": "/(.*)", "destination": "/server.js" }
   ],
-  "env": {
-    "GOOGLE_API_KEY": "@google_api_key"
-  },
   "headers": [
     {
       "source": "/api/(.*)",

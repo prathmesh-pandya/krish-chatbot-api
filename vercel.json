@@ -22,7 +22,7 @@
         { "key": "Access-Control-Allow-Credentials", "value": "true" },
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://krish-chatbot-ui.vercel.app"
+          "value": "https://krish-chatbot-oasrieqf4-prathmesh-pandya-s-projects.vercel.app"
         },
         { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,POST" },
         {

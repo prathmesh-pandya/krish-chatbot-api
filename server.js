@@ -86,21 +86,6 @@ app.post('/api/chat', async (req, res) => {
     try {
         const { message } = req.body;
 
-        // Special case for Divyesh queries
-        const divyeshPattern = /who\s+is\s+divyesh|divyesh\s+jasani|divyesh\s+vasani/i;
-        if (divyeshPattern.test(message)) {
-            // Return the special response for Divyesh
-            return res.json({
-                response: `
-                <h3>Divyesh</h3>
-                <p>He is from the Wasseypur gang.</p>
-                <div class="link-section">
-                    <a href="https://www.krishtechnolabs.com" target="_blank" rel="noopener noreferrer" class="link-button">Visit our website</a>
-                </div>
-                `
-            });
-        }
-
         // If we don't have content yet or it's older than 24 hours, try scraping
         const now = new Date();
         if (!websiteContent || !lastScraped || (now - lastScraped) > 24 * 60 * 60 * 1000) {
@@ -176,6 +161,8 @@ app.post('/api/chat', async (req, res) => {
         const result = await model.generateContent(prompt);
         const response = result.response.text();
 
+        // Process the response to ensure it's valid HTML
+        // If the response doesn't already have HTML, wrap it in paragraph tags
         // Process the response to ensure it's valid HTML
         let formattedResponse = response;
 

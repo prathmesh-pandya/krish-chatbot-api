@@ -72,6 +72,7 @@ async function loadRobotsTxt() {
         const response = await axios.get(robotsUrl);
         const rules = [];
 
+        console.log(response, 'this is respnse ---------------------')
         const lines = response.data.split('\n');
         for (const line of lines) {
             const trimmed = line.trim();

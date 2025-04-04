@@ -233,6 +233,85 @@ app.post('/api/refresh', async (req, res) => {
     }
 });
 
+app.get('/api/debug/cache', async (req, res) => {
+    // // Add basic auth protection for this endpoint
+    // const auth = req.headers.authorization;
+    // if (!auth || auth !== 'Bearer yourSecretKeyHere') {
+    //   return res.status(401).json({ error: 'Unauthorized' });
+    // }
+
+    const fs = require('fs');
+    const path = require('path');
+    const os = require('os');
+
+    try {
+        // Get in-memory cache info
+        const cacheStatus = scraper.getCacheStatus();
+
+        // Check temp directory cache
+        const tempDir = path.join(os.tmpdir(), 'krishtechnolabs-cache');
+        let tempDirInfo = {
+            path: tempDir,
+            exists: false,
+            files: [],
+            sampleFiles: []
+        };
+
+        if (fs.existsSync(tempDir)) {
+            const files = fs.readdirSync(tempDir);
+            tempDirInfo.exists = true;
+            tempDirInfo.fileCount = files.length;
+
+            // Get sample file details
+            const samplesToShow = Math.min(files.length, 3);
+            for (let i = 0; i < samplesToShow; i++) {
+                const filePath = path.join(tempDir, files[i]);
+                const stats = fs.statSync(filePath);
+
+                let fileInfo = {
+                    name: files[i],
+                    size: stats.size,
+                    lastModified: stats.mtime
+                };
+
+                // Try to get content preview
+                try {
+                    const content = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+                    fileInfo.url = content.url;
+                    fileInfo.timestamp = content.timestamp;
+                    fileInfo.contentPreview = content.textContent ?
+                        content.textContent.substring(0, 100) + '...' : 'No content';
+                } catch (error) {
+                    fileInfo.error = error.message;
+                }
+
+                tempDirInfo.sampleFiles.push(fileInfo);
+            }
+        }
+
+        // Get current content info
+        const currentContent = await scraper.loadAllCachedContent();
+        const contentInfo = currentContent ? {
+            size: currentContent.length,
+            preview: currentContent.substring(0, 300) + '...'
+        } : 'No content currently loaded';
+
+        // Return all info
+        res.json({
+            inMemoryCache: cacheStatus,
+            tempDirectoryCache: tempDirInfo,
+            currentContent: contentInfo,
+            websiteContentStats: {
+                available: websiteContent && websiteContent.length > 0,
+                length: websiteContent ? websiteContent.length : 0,
+                lastScraped: lastScraped ? lastScraped.toISOString() : null
+            }
+        });
+    } catch (error) {
+        console.error('Error in debug cache endpoint:', error);
+        res.status(500).json({ error: 'Failed to get cache info', message: error.message });
+    }
+});
 // Clear cache endpoint (protected)
 app.post('/api/clear-cache', (req, res) => {
     // Add authentication here in production
